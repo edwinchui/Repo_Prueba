@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<body>
+
+	<f:metadata>
+		<f:event listener="#{mbCobrador.inicio}" type="preRenderView" />
+	</f:metadata>
+
+	<h:form id="formulario">
+
+		<p:growl showDetail="true" showSummary="true" sticky="false"
+			life="3000" globalOnly="true" />
+
+		<p:fieldset id="fldCobrador" legend="Datos Cobrador">
+			<p:panelGrid id="pnlCobrador">
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtNombre" value="Nombres:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtNombre" value="#{mbCobrador.cobrador.nombre}"
+							required="true" requiredMessage="#{mensajes.datoRequerido}" size="50"
+							maxlength="50" />
+						<p:message for="txtNombre" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtApellidos" value="Apellidos:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtApellidos"
+							value="#{mbCobrador.cobrador.apellidos}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}"  size="50"
+							maxlength="50"/>
+						<p:message for="txtApellidos" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtDocIdentidad" value="Documento Identidad" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtDocIdentidad"
+							value="#{mbCobrador.cobrador.documentoIdentidad}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8" size="10" />
+						<p:message for="txtDocIdentidad" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="slcExpedido"
+							value="#{mbCobrador.cobrador.expedido}" required="true"
+							requiredMessage="Dato Requerido">
+							<f:selectItem itemValue="" itemLabel="Seleccionar valor..." />
+							<f:selectItems value="#{mbCobrador.expedidos}" />
+						</p:selectOneMenu>
+						<p:message for="slcExpedido" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtDireccion" value="Dirección:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtDireccion"
+							value="#{mbCobrador.cobrador.direccion}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="150" size="60" />
+						<p:message for="txtDireccion" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtTelefono" value="Teléfono Celular:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtTelefono"
+							value="#{mbCobrador.cobrador.telefonoCelular}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8" size="10"  />
+						<p:message for="txtTelefono" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtCorreoElectronico"
+							value="Correo Electrónico" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtCorreoElectronico"
+							value="#{mbCobrador.cobrador.correoElectronico}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="50" size="50">
+							<f:validateRegex pattern="#{validaciones.correoElectronico}" />
+							<p:watermark for="txtCorreoElectronico" value="ejemplo@correo.com" />
+						</p:inputText>
+						<p:message for="txtCorreoElectronico" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<div id="botones">
+				<p:commandButton actionListener="#{mbCobrador.guardar}"
+					value="Guardar" icon="ui-icon-disk" ajax="false"
+					update=":frmCobradores:fldCobradores:tblCobradores" />
+				<p:commandButton value="Cancelar" icon="ui-icon-closethick"
+					actionListener="#{mbCobrador.cancelar}" update="pnlCobrador" />
+			</div>
+		</p:fieldset>
+	</h:form>
+	<br />
+	<br />
+	<h:form id="frmCobradores">
+
+		<p:contextMenu for="tblCobradores">
+			<p:menuitem value="Editar" icon="ui-icon-pencil"
+				update=":formulario:fldCobrador" />
+			<p:menuitem value="Eliminar" icon="ui-icon-trash"
+				actionListener="#{mbCobrador.eliminar}" update="tblCobradores" />
+		</p:contextMenu>
+
+		<p:fieldset id="fldCobradores" legend="Lista Cobradores">
+			<p:dataTable id="tblCobradores" value="#{mbCobrador.listaCobradores}"
+				var="cobrador" rowKey="#{cobrador.id}"
+				selection="#{mbCobrador.cobrador}" selectionMode="single"
+				paginator="true" paginatorAlwaysVisible="false"
+				emptyMessage="No existen registros para mostrar">
+				<p:column headerText="Nombres y Apelllidos">
+					<h:outputText value="#{cobrador.nombre} #{cobrador.apellidos}" />
+				</p:column>
+				<p:column headerText="Nombre Usuario">
+					<h:outputText value="#{cobrador.datosCuenta.nombreUsuario}" />
+				</p:column>
+				<p:column headerText="Teléfono">
+					<h:outputText value="#{cobrador.telefonoCelular}" />
+				</p:column>
+				<p:column headerText="Dirección">
+					<h:outputText value="#{cobrador.direccion}" />
+				</p:column>
+				<p:column headerText="Correo Electronico">
+					<h:outputText value="#{cobrador.correoElectronico}" />
+				</p:column>
+			</p:dataTable>
+		</p:fieldset>
+	</h:form>
+
+</body>
+</html>

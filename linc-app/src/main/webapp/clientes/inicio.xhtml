@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+
+</h:head>
+<body>
+
+	<header>
+	<h1>linc-app</h1>
+	</header>
+
+	<f:metadata>
+		<f:event listener="#{mbCliente.inicio}" type="preRenderView" />
+	</f:metadata>
+
+	<h:form id="principal">
+		<p:growl id="grwlGeneral" showDetail="true" showSummary="true"
+			sticky="false" life="3000" globalOnly="true" />
+
+		<p:fieldset legend="Datos Cliente">
+			<p:panelGrid id="pnlCliente" layout="grid">
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtNombre" value="Nombres:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtNombre" value="#{mbCliente.cliente.nombre}"
+							required="true" requiredMessage="#{mensajes.datoRequerido}" size="50"
+							maxlength="50" />
+						<p:message for="txtNombre" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtApellidos" value="Apellidos:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtApellidos"
+							value="#{mbCliente.cliente.apellidos}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" size="50" maxlength="50" />
+						<p:message for="txtApellidos" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtFechaNacimiento" value="Fecha Nacimiento:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:calendar id="txtFechaNacimiento"
+							value="#{mbCliente.cliente.fechaNacimiento}" pattern="dd/MM/yyyy"
+							maxlength="10" size="12" />
+						<p:message for="txtFechaNacimiento" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtDocIdentidad" value="Documento Identidad" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtDocIdentidad"
+							value="#{mbCliente.cliente.documentoIdentidad}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8" size="10" />
+						<p:message for="txtDocIdentidad" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="slcExpedidos"
+							value="#{mbCliente.cliente.expedido}" required="true"
+							requiredMessage="Dato Requerido">
+							<f:selectItem itemValue="" itemLabel="#{mensajes.seleccionarOpcion}" />
+							<f:selectItems value="#{mbCliente.expedido}" />
+						</p:selectOneMenu>
+						<p:message for="slcExpedidos" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtDireccion" value="Dirección:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtDireccion"
+							value="#{mbCliente.cliente.direcion}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="150" size="60" />
+						<p:message for="txtDireccion" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtTelefono" value="Teléfono Celular:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtTelefono"
+							value="#{mbCliente.cliente.telefono}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8" size="10" />
+						<p:message for="txtTelefono" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtCorreoElectronico"
+							value="Correo Electrónico:" />
+					</p:column>
+					<p:column colspan="2">
+						<p:inputText id="txtCorreoElectronico"
+							value="#{mbCliente.cliente.correoElectronico}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="50" size="50">
+							<f:validateRegex pattern="#{validaciones.correoElectronico}" />
+							<p:watermark for="txtCorreoElectronico" value="ejemplo@correo.com"  />
+						</p:inputText>
+						<p:message for="txtCorreoElectronico" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<div id="botones">
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					actionListener="#{mbCliente.guardar}"
+					update="pnlCliente,grwlGeneral,:frmClientes:tblClientes" />
+				<p:commandButton value="Cancelar" icon="ui-icon-closethick"
+					actionListener="#{mbCliente.cancelar}" update="pnlCliente" />
+			</div>
+		</p:fieldset>
+	</h:form>
+	<br />
+	<br />
+	<h:form id="frmClientes">
+
+		<p:contextMenu for="tblClientes">
+			<p:menuitem value="Editar" icon="ui-icon-pencil"
+				update=":principal:pnlCliente" />
+			<p:menuitem value="Eliminar" icon="ui-icon-trash"
+				actionListener="#{mbCliente.eliminar}"
+				update="tblClientes,:principal:grwlGeneral" />
+		</p:contextMenu>
+
+		<p:dataTable id="tblClientes" value="#{mbCliente.listaClientes}"
+			var="cliente" selection="#{mbCliente.cliente}" selectionMode="single"
+			rowKey="#{cliente.id}" paginator="true"
+			paginatorAlwaysVisible="false"
+			emptyMessage="#{mensajes.noExistenRegistros}">
+			<p:column headerText="Nombres y Apellidos">
+				<h:outputText value="#{cliente.nombre} #{cliente.apellidos}" />
+			</p:column>
+			<p:column headerText="Documento Identidad">
+				<h:outputText value="#{cliente.documentoIdentidad}" />
+			</p:column>
+			<p:column headerText="Teléfono">
+				<h:outputText value="#{cliente.telefono}" />
+			</p:column>
+			<p:column headerText="Correo Electrónico">
+				<h:outputText value="#{cliente.correoElectronico}" />
+			</p:column>
+		</p:dataTable>
+	</h:form>
+</body>
+</html>

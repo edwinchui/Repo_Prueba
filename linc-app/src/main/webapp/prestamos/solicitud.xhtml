@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<f:metadata>
+		<f:event listener="#{mbPrestamos.inicio}" type="preRenderView" />
+	</f:metadata>
+
+	<h:form id="principal">
+		<p:growl id="grwGeneral" showDetail="true" showSummary="true"
+			globalOnly="true" />
+
+		<p:fieldset legend="Datos Prestamos">
+			<p:panelGrid>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtCliente" value="Cliente:" />
+					</p:column>
+					<p:column>
+						<p:autoComplete id="txtCliente" required="true"
+							value="#{mbPrestamos.cliente}"
+							completeMethod="#{mbPrestamos.filtrarCliente}"
+							requiredMessage="#{mensajes.datoRequerido}" />
+						<p:message for="txtCliente" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtMonto" value="Monto Credito:" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtMonto"
+							value="#{mbPrestamos.prestamo.montoCredito}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8"
+							size="10" />
+						<p:message for="txtMonto" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="slcTipoMoneda" value="Tipo Moneda:" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="slcTipoMoneda"
+							value="#{mbPrestamos.prestamo.tipoMoneda}">
+							<f:selectItem itemValue=""
+								itemLabel="#{mensajes.seleccionarOpcion}" />
+							<f:selectItems value="#{mbPrestamos.tiposMoneda}" />
+						</p:selectOneMenu>
+						<p:message for="slcTipoMoneda" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtInteres" value="Interes:" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtInteres"
+							value="#{mbPrestamos.prestamo.interes}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="4"
+							size="5">
+							<p:watermark for="txtInteres" value="%" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtFechaLimite" value="Fecha Limite :" />
+					</p:column>
+					<p:column>
+						<p:calendar id="txtFechaLimite"
+							value="#{mbPrestamos.prestamo.fechaLimitePago}" mode="inline"
+							required="true" requiredMessage="#{mensajes.datoRequerido}" />
+						<p:message for="txtFechaLimite" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtTipoCambio" value="Tipo Cambio:" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtTipoCambio"
+							value="#{mbPrestamos.prestamo.tipoCambio}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="5"
+							size="8" />
+						<p:message for="txtTipoCambio" />
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+		</p:fieldset>
+		<br />
+		<br />
+		<p:fieldset legend="Lista Garantias">
+			<p:dataTable id="tblGarantias" value="#{mbPrestamos.listaGarantias}"
+				var="garantia" selection="#{mbPrestamos.garantia}"
+				selectionMode="single" rowKey="#{garantia.id}"
+				emptyMessage="#{mensajes.noExistenRegistros}">
+				<p:column headerText="Tipo Garantía">
+					<h:outputText value="#{garantia.tipoGarantia}" />
+				</p:column>
+				<p:column headerText="Valor Garantía">
+					<h:outputText value="#{garantia.valorGarantia}" />
+				</p:column>
+				<p:column headerText="Descripción">
+					<h:outputText value="#{garantia.descripcion}" />
+				</p:column>
+				<f:facet name="footer">
+					<h:outputText
+						value="En total se tiene ${fn:length(mbPrestamos.listaGarantias)} registros." />
+				</f:facet>
+			</p:dataTable>
+		</p:fieldset>
+		<div class="botones">
+			<p:commandButton value="Agregar Garantias" icon="ui-icon-plus"
+				type="button" onclick="PF('dlgGarantia').show()" />
+		</div>
+	</h:form>
+
+	<h:form>
+		<p:dialog header="Datos Garantía" id="dlgGarantia"
+			widgetVar="dlgGarantia" resizable="true" modal="true">
+			<p:panel>
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<p:outputLabel for="slcTipoGarantia" value="Tipo Garantia:" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="slcTipoGarantia"
+								value="#{mbPrestamos.garantia.tipoGarantia}" required="true"
+								requiredMessage="#{mensajes.datoRequerido}">
+								<f:selectItem itemLabel=""
+									itemValue="#{mensajes.seleccionarOpcion}" />
+								<f:selectItems value="#{mbPrestamos.tiposGarantias}" />
+							</p:selectOneMenu>
+							<p:message for="slcTipoGarantia" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel for="txtValorGarantia" value="Valor Garantía:" />
+						</p:column>
+						<p:column>
+							<p:inputText id="txtValorGarantia"
+								value="#{mbPrestamos.garantia.valorGarantia}" required="true"
+								requiredMessage="#{mensajes.datoRequerido}" maxlength="8"
+								size="10" />
+							<p:message id="txtValorGarantia" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel for="txaDescripcion" value="Descripción:" />
+						</p:column>
+						<p:column>
+							<p:inputTextarea id="txaDescripcion"
+								value="#{mbPrestamos.garantia.descripcion}" required="true"
+								requiredMessage="#{mensajes.datoRequerido}" cols="50" rows="5" />
+							<p:message for="txaDescripcion" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<div class="botones">
+					<p:commandButton value="Agregar" icon="ui-icon-plus"
+						actionListener="#{mbPrestamos.agregarGarantia}"
+						oncomplete="PF('dlgGarantia').hide()"
+						update=":principal:tblGarantias" />
+				</div>
+			</p:panel>
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>
