@@ -112,69 +112,66 @@
 				<p:column headerText="Descripción">
 					<h:outputText value="#{garantia.descripcion}" />
 				</p:column>
+				
 				<f:facet name="footer">
-					<h:outputText
-						value="En total se tiene ${fn:length(mbPrestamos.listaGarantias)} registros." />
+					<p:commandButton value="Agregar Garantia" icon="ui-icon-plus"
+						type="button" onclick="PF('dlgGarantia').show()" />
 				</f:facet>
 			</p:dataTable>
 		</p:fieldset>
 		<div class="botones">
-			<p:commandButton value="Agregar Garantias" icon="ui-icon-plus"
-				type="button" onclick="PF('dlgGarantia').show()" />
+			<p:commandButton value="Guardar" icon="ui-icon-disk" action="#{mbPrestamos.guardar}" ajax="false" />
 		</div>
 	</h:form>
 
-	<h:form>
-		<p:dialog header="Datos Garantía" id="dlgGarantia"
-			widgetVar="dlgGarantia" resizable="true" modal="true">
-			<p:panel>
-				<p:panelGrid>
-					<p:row>
-						<p:column>
-							<p:outputLabel for="slcTipoGarantia" value="Tipo Garantia:" />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu id="slcTipoGarantia"
-								value="#{mbPrestamos.garantia.tipoGarantia}" required="true"
-								requiredMessage="#{mensajes.datoRequerido}">
-								<f:selectItem itemLabel=""
-									itemValue="#{mensajes.seleccionarOpcion}" />
-								<f:selectItems value="#{mbPrestamos.tiposGarantias}" />
-							</p:selectOneMenu>
-							<p:message for="slcTipoGarantia" />
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column>
-							<p:outputLabel for="txtValorGarantia" value="Valor Garantía:" />
-						</p:column>
-						<p:column>
-							<p:inputText id="txtValorGarantia"
-								value="#{mbPrestamos.garantia.valorGarantia}" required="true"
-								requiredMessage="#{mensajes.datoRequerido}" maxlength="8"
-								size="10" />
-							<p:message id="txtValorGarantia" />
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column>
-							<p:outputLabel for="txaDescripcion" value="Descripción:" />
-						</p:column>
-						<p:column>
-							<p:inputTextarea id="txaDescripcion"
-								value="#{mbPrestamos.garantia.descripcion}" required="true"
-								requiredMessage="#{mensajes.datoRequerido}" cols="50" rows="5" />
-							<p:message for="txaDescripcion" />
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-				<div class="botones">
-					<p:commandButton value="Agregar" icon="ui-icon-plus"
-						actionListener="#{mbPrestamos.agregarGarantia}"
-						oncomplete="PF('dlgGarantia').hide()"
-						update=":principal:tblGarantias" />
-				</div>
-			</p:panel>
+	<h:form id="formGarantia">
+		<p:dialog widgetVar="dlgGarantia" id="dlgGarantia"
+			header="Datos Garantia" resizable="false" modal="true">
+			<p:panelGrid>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="slcTiposGarantias" value="Tipo Garantia:" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="slcTiposGarantias"
+							value="#{mbPrestamos.garantia.tipoGarantia}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}">
+							<f:selectItem itemLabel="#{mensajes.seleccionarOpcion}"
+								itemValue="" />
+							<f:selectItems value="#{mbPrestamos.tiposGarantias}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txtValor" value="Valor Garantía:" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtValor"
+							value="#{mbPrestamos.garantia.valorGarantia}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" maxlength="8"
+							size="10" />
+						<p:message for="txtValor" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<p:outputLabel for="txaDescripcion" value="Descripción:" />
+					</p:column>
+					<p:column>
+						<p:inputTextarea id="txaDescripcion"
+							value="#{mbPrestamos.garantia.descripcion}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" cols="20" rows="5" />
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+			<div class="botones">
+				<p:commandButton value="Agregar"
+					actionListener="#{mbPrestamos.agregarGarantia}"
+					update=":principal:tblGarantias"
+					oncomplete="PF('dlgGarantia').hide" />
+			</div>
 		</p:dialog>
 	</h:form>
 </h:body>

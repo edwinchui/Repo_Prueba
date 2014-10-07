@@ -2,6 +2,7 @@ package net.linc.app.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import net.linc.app.data.ClienteDao;
+import net.linc.app.data.PrestamoDao;
 import net.linc.app.model.Cliente;
 import net.linc.app.model.Garantia;
 import net.linc.app.model.Prestamo;
@@ -30,6 +32,9 @@ public class PrestamosController implements Serializable {
 	
 	@Inject
 	private ClienteDao daoCliente;
+	
+	@Inject
+	private PrestamoDao daoPrestamo;
 	
 	@Inject
 	private Conversation conversacion;
@@ -75,6 +80,15 @@ public class PrestamosController implements Serializable {
 	public void agregarGarantia() {
 		this.listaGarantias.add(this.garantia);
 		this.garantia = new Garantia();
+	}
+	
+	public void guardar() {
+		this.prestamo.setFechaRegistro(new Date());
+		this.prestamo.setEstado("AC");
+		this.prestamo.setGarantias(this.listaGarantias);
+		this.prestamo.setCliente(this.cliente);
+		
+		this.daoPrestamo.regPrestamo(this.prestamo);
 	}
 	
 	public Cliente getCliente() {
