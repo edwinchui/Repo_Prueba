@@ -9,9 +9,11 @@ import java.util.List;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import net.linc.app.converter.ClienteConverter;
 import net.linc.app.data.ClienteDao;
 import net.linc.app.data.PrestamoDao;
 import net.linc.app.model.Cliente;
@@ -89,6 +91,10 @@ public class PrestamosController implements Serializable {
 		this.prestamo.setCliente(this.cliente);
 		
 		this.daoPrestamo.regPrestamo(this.prestamo);
+	}
+	
+	public Converter getConvertirCliente() {
+		return new ClienteConverter(this.listaClientes);
 	}
 	
 	public Cliente getCliente() {
