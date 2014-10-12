@@ -26,9 +26,10 @@
 					<p:column>
 						<p:autoComplete id="txtCliente" required="true"
 							value="#{mbPrestamos.cliente}" dropdown="true"
-							completeMethod="#{mbPrestamos.filtrarCliente}"
-							var="cliente" itemLabel="#{cliente.nombre} #{cliente.apellidos}"
-							itemValue="#{cliente}" converter="#{mbPrestamos.convertirCliente}"
+							completeMethod="#{mbPrestamos.filtrarCliente}" var="cliente"
+							itemLabel="#{cliente.nombre} #{cliente.apellidos}"
+							itemValue="#{cliente}"
+							converter="#{mbPrestamos.convertirCliente}"
 							requiredMessage="#{mensajes.datoRequerido}" />
 						<p:message for="txtCliente" />
 					</p:column>
@@ -78,8 +79,8 @@
 					</p:column>
 					<p:column>
 						<p:calendar id="txtFechaLimite"
-							value="#{mbPrestamos.prestamo.fechaLimitePago}" mode="inline"
-							required="true" requiredMessage="#{mensajes.datoRequerido}" />
+							value="#{mbPrestamos.prestamo.fechaLimitePago}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}" />
 						<p:message for="txtFechaLimite" />
 					</p:column>
 				</p:row>
@@ -101,6 +102,12 @@
 		<br />
 		<br />
 		<p:fieldset legend="Lista Garantias">
+			<p:contextMenu for="tblGarantias">
+			</p:contextMenu>
+			<div style="float: right; padding: 5px 5px 5px 5px;">
+				<p:commandButton value="Agregar Garantia" icon="ui-icon-plus"
+					type="button" onclick="PF('dlgGarantia').show()" />
+			</div>
 			<p:dataTable id="tblGarantias" value="#{mbPrestamos.listaGarantias}"
 				var="garantia" selection="#{mbPrestamos.garantia}"
 				selectionMode="single" rowKey="#{garantia.id}"
@@ -109,20 +116,22 @@
 					<h:outputText value="#{garantia.tipoGarantia}" />
 				</p:column>
 				<p:column headerText="Valor Garantía">
-					<h:outputText value="#{garantia.valorGarantia}" />
+					<h:outputText value="#{garantia.valorGarantia}">
+						<f:convertNumber type="number" pattern="###,###.##" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Tipo Moneda">
+					<h:outputText value="#{garantia.tipoMoneda}" />
 				</p:column>
 				<p:column headerText="Descripción">
 					<h:outputText value="#{garantia.descripcion}" />
 				</p:column>
-				
-				<f:facet name="footer">
-					<p:commandButton value="Agregar Garantia" icon="ui-icon-plus"
-						type="button" onclick="PF('dlgGarantia').show()" />
-				</f:facet>
+
 			</p:dataTable>
 		</p:fieldset>
 		<div class="botones">
-			<p:commandButton value="Guardar" icon="ui-icon-disk" action="#{mbPrestamos.guardar}" ajax="false" />
+			<p:commandButton value="Guardar" icon="ui-icon-disk"
+				action="#{mbPrestamos.guardar}" ajax="false" />
 		</div>
 	</h:form>
 
@@ -158,6 +167,20 @@
 				</p:row>
 				<p:row>
 					<p:column>
+						<p:outputLabel for="slcTipoMoneda" value="Tipo Moneda:" />
+					</p:column>
+					<p:column>
+						<p:selectOneMenu id="slcTipoMoneda"
+							value="#{mbPrestamos.garantia.tipoMoneda}" required="true"
+							requiredMessage="#{mensajes.datoRequerido}">
+							<f:selectItem itemValue=""
+								itemLabel="#{mensajes.seleccionarOpcion}" />
+							<f:selectItems value="#{mbPrestamos.tiposMoneda}" />
+						</p:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
 						<p:outputLabel for="txaDescripcion" value="Descripción:" />
 					</p:column>
 					<p:column>
@@ -172,7 +195,7 @@
 				<p:commandButton value="Agregar"
 					actionListener="#{mbPrestamos.agregarGarantia}"
 					update=":principal:tblGarantias"
-					oncomplete="PF('dlgGarantia').hide" />
+					oncomplete="PF('dlgGarantia').hide()" />
 			</div>
 		</p:dialog>
 	</h:form>

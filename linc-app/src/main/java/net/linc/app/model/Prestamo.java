@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,11 +28,11 @@ public class Prestamo {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRESTAMO_GENERADOR_ID")
 	private long id;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Cliente.class)
+	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Garantia.class)
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "prestamo")
 	@NotNull
 	private List<Garantia> garantias;
 	
@@ -42,7 +41,7 @@ public class Prestamo {
 	@NotNull
 	private Date fechaRegistro;
 	
-	@Column(name = "monto_credito", length = 5, precision = 2)
+	@Column(name = "monto_credito", precision = 7, scale = 2)
 	@NotNull
 	private BigDecimal montoCredito;
 	
@@ -50,7 +49,7 @@ public class Prestamo {
 	@NotNull
 	private String tipoMoneda;
 	
-	@Column(length = 2, precision = 1)
+	@Column(precision = 3, scale = 1)
 	@NotNull
 	private BigDecimal interes;
 	
@@ -59,7 +58,7 @@ public class Prestamo {
 	@NotNull
 	private Date fechaLimitePago;
 	
-	@Column(name = "tipo_cambio", length = 2, precision = 2)
+	@Column(name = "tipo_cambio", precision = 4, scale = 2)
 	@NotNull
 	private BigDecimal tipoCambio;
 	

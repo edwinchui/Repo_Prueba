@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class Cuenta {
 
 	@Id
-	@SequenceGenerator(name = "CUENTA_GENERADOR_ID", sequenceName = "cuenta_sec", allocationSize=100)
+	@SequenceGenerator(name = "CUENTA_GENERADOR_ID", sequenceName = "cuenta_sec", allocationSize=0)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CUENTA_GENERADOR_ID")
 	private long id;
 

@@ -38,7 +38,7 @@ public class CobradorDao {
 
 		query.select(cobradorRoot)
 				.where(builder.equal(cobradorRoot.get("estado"), "AC"))
-				.orderBy(builder.asc(cobradorRoot.get("nombres")));
+				.orderBy(builder.asc(cobradorRoot.get("nombre")));
 
 		return this.entityManager.createQuery(query).getResultList();
 	}

@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,16 +22,19 @@ public class Garantia {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GARANTIA_GENERADOR_ID")
 	private long id;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Prestamo.class)
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "id_prestamo")
 	private Prestamo prestamo;
 	
-	@Column(name = "tipo_garantia", length = 5)
+	@Column(name = "tipo_garantia", length = 150)
 	private String tipoGarantia;
 
-	@Column(name = "valor_garantia", length = 5, precision = 2)
+	@Column(name = "valor_garantia", precision = 7, scale = 2)
 	private BigDecimal valorGarantia;
-
+	
+	@Column(name = "tipo_moneda", length = 4)
+	private String tipoMoneda;
+	
 	@Column(length = 250)
 	private String descripcion;
 
@@ -77,6 +79,22 @@ public class Garantia {
 
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public Prestamo getPrestamo() {
+		return prestamo;
+	}
+
+	public void setPrestamo(Prestamo prestamo) {
+		this.prestamo = prestamo;
+	}
+
+	public String getTipoMoneda() {
+		return tipoMoneda;
+	}
+
+	public void setTipoMoneda(String tipoMoneda) {
+		this.tipoMoneda = tipoMoneda;
 	}
 
 }
